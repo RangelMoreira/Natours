@@ -30,11 +30,23 @@ class APIFeature {
   sort() {
     //  2) Sorting and filtering
     if (this.queryString.sort) {
-      const sortBy = this.queryString.sort.split(",").join(" ");
+      const sortBy = this.queryString.sort.split(",").jlimitFields().join(" ");
       console.log(sortBy);
       this.query = this.query.sort(sortBy);
     } else {
       this.query = this.query.sort("-createdAt");
+    }
+
+    return this;
+  }
+
+  limitFields() {
+    // 3) Field limiting
+    if (this.queryString.fields) {
+      const fields = this.queryString.fields.split(",").join(" ");
+      this.query = this.query.select(fields);
+    } else {
+      this.query = this.query.select("-__v");
     }
 
     return this;
@@ -104,7 +116,10 @@ exports.getAllTours = async (req, res) => {
     // }
 
     //EXECUTE QUERY
-    const features = new APIFeature(Tour.find(), req.query).filter().sort();
+    const features = new APIFeature(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields();
     const tours = await features.query;
 
     // const query = await Tour.find()

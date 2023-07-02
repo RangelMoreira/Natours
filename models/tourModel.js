@@ -97,7 +97,7 @@ tourSchema.post(/^find/, function (docs, next) {
   next();
 });
 
-// AGGREFGATION MIDDLEWARE
+// AGGREGATION MIDDLEWARE
 tourSchema.pre("aggregate", function (next) {
   //.unshift add an element int beginning of the array
   this.pipeline().unshift({ $match: { secretTour: { $ne: true } } });

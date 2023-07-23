@@ -12,6 +12,15 @@ const handlerDuplicateFields = (err) => {
 
   return new AppError(message, 400);
 };
+
+const handleValidationErrorDB = (err) => {
+  //Store errors messages for each field
+  const errors = Object.values(err.errors).map((el) => el.message);
+
+  //It shows all errors in this string
+  const message = `Invalid input data. ${errors.join(".  ")}`;
+  return new AppError(message, 400);
+};
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,
@@ -53,6 +62,9 @@ module.exports = (err, req, res, next) => {
     let error = Object.create(err);
 
     //Mongo database
+    if (error.name === "ValidationError")
+      error = handleValidationErrorDB(error);
+
     if (error.name === "CastError") error = handlerCastErrorDB(error);
 
     if (error.code === 11000) error = handlerDuplicateFields(error);

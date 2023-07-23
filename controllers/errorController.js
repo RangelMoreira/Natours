@@ -21,6 +21,7 @@ const handleValidationErrorDB = (err) => {
   const message = `Invalid input data. ${errors.join(".  ")}`;
   return new AppError(message, 400);
 };
+
 const sendErrorDev = (err, res) => {
   res.status(err.statusCode).json({
     status: err.status,

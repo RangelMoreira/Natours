@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 
 const dotenv = require("dotenv");
+
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT EXCEPTION! 💥 Shutting down...");
+  console.log(err.name, err.message);
+
+  process.exit(1); //1 - for not sucessful exit -> Will aobort all pending and currently running requests
+});
+
 /*
 We should add first the dotenv and after the app
 */
@@ -37,8 +45,8 @@ const server = app.listen(port, () => {
 });
 
 process.on("unhandledRejection", (err) => {
+  console.log("UNHANDLED REJECTION! 💥 Shutting down...");
   console.log(err.name, err.message);
-  console.log("UNHANDLED REJECTION! 💥 Shutting down");
 
   //Just kill the server
   server.close(() => {

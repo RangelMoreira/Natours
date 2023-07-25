@@ -1,7 +1,7 @@
-const mongose = require("mongose");
+const mongoose = require("mongoose");
 const validator = require("validator");
 
-const userSchema = new mongose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: "string",
     required: [true, "Please tell us your name"],
@@ -11,7 +11,7 @@ const userSchema = new mongose.Schema({
     required: [true, "Please provide your email address"],
     unique: true,
     lowercase: true,
-    validate: [validator.idEmail, "Please provide your email address"],
+    validate: [validator.isEmail, "Please provide your email address"],
   },
   photo: String,
   password: {
@@ -22,7 +22,6 @@ const userSchema = new mongose.Schema({
   passwordConfirm: {
     type: "string",
     required: [true, "The user should have a name"],
-    unique: true,
     trim: true,
   },
 });

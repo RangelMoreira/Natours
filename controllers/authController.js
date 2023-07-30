@@ -54,3 +54,14 @@ exports.login = catchAsync(async (req, res, next) => {
     token,
   });
 });
+
+exports.protect = catchAsync(async (req, res, next) => {
+  // 1) Getting tokrn and check of it's there
+
+  //2) Verification   token
+
+  //3)  Check  if user still exists
+
+  //4) Check if user chaged password after the JWT was issued
+  next();
+});

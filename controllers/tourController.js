@@ -12,7 +12,6 @@ exports.aliasTopTours = (req, res, next) => {
 
 exports.getTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findById(req.params.id);
-  //Tour.findOne({_id: req.params.id })
 
   if (!tour) {
     return next(new AppError("Tour not found with that id", 404));

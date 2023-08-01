@@ -23,7 +23,10 @@ const handleValidationErrorDB = (err) => {
 };
 
 // => have an implicit return
-const handleJWTErrorDB = (err) =>
+const handleJWTErrorDB = () =>
+  new AppError("Invalid token. Please login again!", 401); //Only for production
+
+const handleJWTExpiredError = () =>
   new AppError("Invalid token. Please login again!", 401); //Only for production
 
 const sendErrorDev = (err, res) => {
@@ -74,7 +77,9 @@ module.exports = (err, req, res, next) => {
 
     if (error.code === 11000) error = handlerDuplicateFields(error);
 
-    if (error.name === "JsonWebTokenError") error = handleJWTErrorDB(error);
+    if (error.name === "JsonWebTokenError") error = handleJWTErrorDB();
+
+    if (error.name === "TokenExpiredError") error = handleJWTExpiredError();
 
     sendErrorProd(error, res);
   }

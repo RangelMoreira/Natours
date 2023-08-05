@@ -59,6 +59,7 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting tokrn and check of it's there
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
@@ -66,15 +67,25 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(" ")[1];
   }
 
-  //2) Verification   token
   if (!token) {
     return next(
       new AppError("You are not logged in! Please log in to get access", 401)
     );
   }
-  //3)  Check  if user still exists
+
+  //2) Verification   token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+
+  //3)  Check  if user still exists
+  const freshUser = await User.findById(decoded.id);
+  if (!freshUser) {
+    return next(
+      new AppError(
+        "The user belonging to this token does no longer exist.",
+        401
+      )
+    );
+  }
 
   //4) Check if user chaged password after the JWT was issued
   next();

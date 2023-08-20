@@ -1,41 +1,41 @@
-const crypto = require("crypto");
-const mongoose = require("mongoose");
-const validator = require("validator");
-const bcrypt = require("bcryptjs");
+const crypto = require('crypto');
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
-    type: "string",
-    required: [true, "Please tell us your name"],
+    type: 'string',
+    required: [true, 'Please tell us your name'],
   },
   email: {
-    type: "string",
-    required: [true, "Please provide your email address"],
+    type: 'string',
+    required: [true, 'Please provide your email address'],
     unique: true,
     lowercase: true,
-    validate: [validator.isEmail, "Please provide a valid email"],
+    validate: [validator.isEmail, 'Please provide a valid email'],
   },
   photo: String,
   role: {
     type: String,
-    enum: ["user", "guide", "lead-guide", "admin"],
-    default: "user",
+    enum: ['user', 'guide', 'lead-guide', 'admin'],
+    default: 'user',
   },
   password: {
-    type: "string",
-    required: [true, "The user should have a name"],
+    type: 'string',
+    required: [true, 'The user should have a name'],
     minlength: 8,
     select: false,
   },
   passwordConfirm: {
-    type: "string",
-    required: [true, "The user should input password confirmation"],
+    type: 'string',
+    required: [true, 'The user should input password confirmation'],
     validate: {
       //This only works on CREATE and SAVE!!!
       validator: function (el) {
         return el === this.password;
       },
-      message: "Passwords are not the same!",
+      message: 'Passwords are not the same!',
     },
   },
 
@@ -44,9 +44,9 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
 });
 
-userSchema.pre("save", async function (next) {
+userSchema.pre('save', async function (next) {
   //Only run this function if the password was actually modified
-  if (!this.isModified("password")) return next();
+  if (!this.isModified('password')) return next();
 
   //Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
@@ -54,6 +54,14 @@ userSchema.pre("save", async function (next) {
   //Delete the password confirm
   this.passwordConfirm = undefined;
 
+  next();
+});
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  //Decrease one second because the token is generated before the update
+  this.passwordChangedAt = Date.now() - 1000;
   next();
 });
 
@@ -79,12 +87,12 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
 };
 
 userSchema.methods.createPasswordResetToken = function () {
-  const resetToken = crypto.randomBytes(32).toString("hex");
+  const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(resetToken)
-    .digest("hex");
+    .digest('hex');
 
   console.log({ resetToken }, this.passwordResetToken);
 
@@ -93,6 +101,6 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetToken;
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

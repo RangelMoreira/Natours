@@ -11,6 +11,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const bodyParser = require('body-parser');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const hpp = require('hpp');
 
 const app = express();
 
@@ -38,6 +39,13 @@ app.use(mongoSanitize());
 
 //Data sanitization against XSS
 app.use(XSS());
+
+//Prevent parameter polution
+app.use(
+  hpp({
+    whitelist: ['duration'],
+  })
+);
 
 //Serving static files
 app.use(express.static(`${__dirname}/public`));

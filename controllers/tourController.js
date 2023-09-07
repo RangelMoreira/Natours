@@ -1,24 +1,28 @@
-const Tour = require("../models/tourModel");
-const APIFeature = require("../utils/apiFeatures");
-const catchAsync = require("./../utils/catchAsync");
-const AppError = require("./../utils/appError");
+const Tour = require('../models/tourModel');
+const APIFeature = require('../utils/apiFeatures');
+const catchAsync = require('./../utils/catchAsync');
+const AppError = require('./../utils/appError');
 
 exports.aliasTopTours = (req, res, next) => {
-  req.query.limit = "5";
-  req.query.sort = "-ratingsAverage,price";
-  req.query.fields = "name,price, ratingsAverage, summary, difficulty";
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price, ratingsAverage, summary, difficulty';
   next();
 };
 
 exports.getTour = catchAsync(async (req, res, next) => {
+  // const tour = await Tour.findById(req.params.id).populate({
+  //   path: 'guides',
+  //   select: '-__v -passwordChangedAt -passwordResetExpires -passwordResetToken',
+  // });
   const tour = await Tour.findById(req.params.id);
 
   if (!tour) {
-    return next(new AppError("Tour not found with that id", 404));
+    return next(new AppError('Tour not found with that id', 404));
   }
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       tour,
     },
@@ -36,7 +40,7 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
 
   //SEND RESPONSE
   res.status(200).json({
-    status: "success",
+    status: 'success',
     requestAt: req.requestTime,
     results: tours.length,
     data: {
@@ -52,7 +56,7 @@ exports.createTrour = catchAsync(async (req, res, next) => {
   const newTour = await Tour.create(req.body);
 
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: {
       tour: newTour,
     },
@@ -66,11 +70,11 @@ exports.updateTour = catchAsync(async (req, res, next) => {
   });
 
   if (!tour) {
-    return next(new AppError("Tour not found with that id", 404));
+    return next(new AppError('Tour not found with that id', 404));
   }
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       tour,
     },
@@ -81,11 +85,11 @@ exports.deleteTour = catchAsync(async (req, res, next) => {
   const tour = await Tour.findByIdAndRemove(req.params.id);
 
   if (!tour) {
-    return next(new AppError("Tour not found with that id", 404));
+    return next(new AppError('Tour not found with that id', 404));
   }
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });
@@ -98,13 +102,13 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     {
       $group: {
         // _id: null, //No segregate by groups
-        _id: { $toUpper: "$difficulty" }, //Grouping by fields
+        _id: { $toUpper: '$difficulty' }, //Grouping by fields
         numTours: { $sum: 1 }, //Add 1 for each document
-        numRatings: { $sum: "$ratingAverage" }, // sum of all ratings
-        avgRating: { $avg: "$rattingsQuantity" },
-        avgPrice: { $avg: "$price" },
-        minPrice: { $min: "$price" },
-        maxPrice: { $max: "$price" },
+        numRatings: { $sum: '$ratingAverage' }, // sum of all ratings
+        avgRating: { $avg: '$rattingsQuantity' },
+        avgPrice: { $avg: '$price' },
+        minPrice: { $min: '$price' },
+        maxPrice: { $max: '$price' },
       },
     },
     {
@@ -115,7 +119,7 @@ exports.getTourStats = catchAsync(async (req, res, next) => {
     // },
   ]);
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       stats,
     },
@@ -126,7 +130,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   const year = req.params.year * 1;
   const plan = await Tour.aggregate([
     {
-      $unwind: "$startDates", //Create a document for each element  of array
+      $unwind: '$startDates', //Create a document for each element  of array
     },
     {
       $match: {
@@ -138,14 +142,14 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
     },
     {
       $group: {
-        _id: { $month: "$startDates" }, //Grouping by month
+        _id: { $month: '$startDates' }, //Grouping by month
         numTourStars: { $sum: 1 },
-        tours: { $push: "$name" }, //Array  with tour names
+        tours: { $push: '$name' }, //Array  with tour names
       },
     },
     {
       //Replacing the id field for the label month
-      $addFields: { month: "$_id" },
+      $addFields: { month: '$_id' },
     },
     {
       //Do not show id anymore
@@ -163,7 +167,7 @@ exports.getMonthlyPlan = catchAsync(async (req, res, next) => {
   ]);
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       plan,
     },

@@ -1,37 +1,37 @@
-const express = require("express");
-const tourController = require("./../controllers/tourController");
-const authController = require("./../controllers/authController");
+const express = require('express');
+const tourController = require('./../controllers/tourController');
+const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
 // router.param('id', tourController.checkId);
 
 /*
-    Create a checkBody muddleware
+    Create a checkBody middleware
     Check if body contains the name and price property
     If not, send back 400 (bad request)
     Add it ro the post handler stack
 */
 
 router
-  .route("/top-5-cheap")
+  .route('/top-5-cheap')
   .get(tourController.aliasTopTours, tourController.getAllTours);
 
-router.route("/tours-stats").get(tourController.getTourStats);
-router.route("/monthly-plan/:year").get(tourController.getMonthlyPlan);
+router.route('/tours-stats').get(tourController.getTourStats);
+router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 
 router
-  .route("/")
+  .route('/')
   .get(authController.protect, tourController.getAllTours)
   .post(tourController.createTrour);
 
 router
-  .route("/:id")
+  .route('/:id')
   .get(tourController.getTour)
   .patch(tourController.updateTour)
   .delete(
     authController.protect,
-    authController.restrictTo("admin", "lead-guide"),
+    authController.restrictTo('admin', 'lead-guide'),
     tourController.deleteTour
   );
 

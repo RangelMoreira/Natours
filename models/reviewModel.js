@@ -4,11 +4,11 @@ const mongoose = require('mongoose');
 const reviewSchema = new mongoose.Schema(
   {
     review: {
-      typeof: String,
+      type: String,
       required: [true, 'Review can not be empty!'],
     },
     rating: {
-      typeof: Number,
+      type: Number,
       min: 1,
       max: 5,
     },
@@ -16,15 +16,15 @@ const reviewSchema = new mongoose.Schema(
       type: Date,
       default: Date.now(),
     },
-    tours: {
+    tour: {
       type: mongoose.Schema.ObjectId,
       ref: 'Tour',
-      requited: [true, 'Review mus belong to a tour'],
+      requited: [true, 'Review must belong to be a tour'],
     },
-    users: {
+    user: {
       type: mongoose.Schema.ObjectId,
       ref: 'User',
-      requited: [true, 'Review mus belong to a user'],
+      requited: [true, 'Review muts belong to be a user'],
     },
   },
   {
@@ -35,11 +35,11 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.pre(/^find/, function (next) {
   this.populate({
-    path: 'guides',
-    select: '-__v -passwordChangedAt -passwordResetExpires -passwordResetToken',
+    path: 'user',
+    select: 'name photo',
   }).populate({
-    path: 'tours',
-    select: '-guides',
+    path: 'tour',
+    select: 'name',
   });
 
   next();

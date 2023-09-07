@@ -11,6 +11,7 @@ const globalErrorHandler = require('./controllers/errorController');
 const bodyParser = require('body-parser');
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
+const reviewRouter = require('./routes/reviewRoutes');
 const hpp = require('hpp');
 
 const app = express();
@@ -59,6 +60,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json());
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/review', reviewRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

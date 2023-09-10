@@ -174,6 +174,13 @@ tourSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+//Virtual popuate
+tourSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 //We should  use capital letters for the first letter in mondel names
 const Tour = mongoose.model('Tour', tourSchema);
 

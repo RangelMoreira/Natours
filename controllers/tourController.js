@@ -51,40 +51,6 @@ exports.getAllTours = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createTrour = catchAsync(async (req, res, next) => {
-  // const newTour = new Tour({ })
-  // newTour.save();
-
-  const newTour = await Tour.create(req.body);
-
-  res.status(201).json({
-    status: 'success',
-    data: {
-      tour: newTour,
-    },
-  });
-});
-
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true, //Will just validate if true
-  });
-
-  if (!tour) {
-    return next(new AppError('Tour not found with that id', 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-});
-
-exports.deleteTour = factory.deleteOne(Tour);
-
 // exports.deleteTour = catchAsync(async (req, res, next) => {
 //   const tour = await Tour.findByIdAndRemove(req.params.id);
 
@@ -97,6 +63,11 @@ exports.deleteTour = factory.deleteOne(Tour);
 //     data: null,
 //   });
 // });
+
+//Do NOT update passwords with this!
+exports.updateTour = factory.updateOne(Tour);
+exports.deleteTour = factory.deleteOne(Tour);
+exports.createTour = factory.createOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([

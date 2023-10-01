@@ -19,14 +19,14 @@ exports.deleteTour = factory.deleteOne(Tour);
 exports.getTourStats = catchAsync(async (req, res, next) => {
   const stats = await Tour.aggregate([
     {
-      $match: { ratingAverage: { $gte: 4.5 } },
+      $match: { ratingsAverage: { $gte: 4.5 } },
     },
     {
       $group: {
         // _id: null, //No segregate by groups
         _id: { $toUpper: '$difficulty' }, //Grouping by fields
         numTours: { $sum: 1 }, //Add 1 for each document
-        numRatings: { $sum: '$ratingAverage' }, // sum of all ratings
+        numRatings: { $sum: '$ratingsAverage' }, // sum of all ratings
         avgRating: { $avg: '$rattingsQuantity' },
         avgPrice: { $avg: '$price' },
         minPrice: { $min: '$price' },

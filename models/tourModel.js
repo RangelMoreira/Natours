@@ -38,7 +38,7 @@ const tourSchema = new mongoose.Schema(
       min: [1, 'Rating must be above 1.0'],
       max: [5, 'Rating must be below 5.0'],
     },
-    rattingsQuantity: {
+    ratingsQuantity: {
       type: Number,
       default: 0,
     },
@@ -123,21 +123,21 @@ tourSchema.pre('save', function (next) {
   next();
 });
 
-// tourSchema.pre('save', async function (next) {
-//   const guidesPromises = this.guides.map(async (id) => await User.findById(id));
-//   this.guides = await Promise.all(guidesPromises);
-//   next();
-// });
+tourSchema.pre('save', async function (next) {
+  const guidesPromises = this.guides.map(async (id) => await User.findById(id));
+  this.guides = await Promise.all(guidesPromises);
+  next();
+});
 
-// tourSchema.pre("save", function (next) {
-//   console.log("Will save document...");
-//   next();
-// });
+tourSchema.pre('save', function (next) {
+  console.log('Will save document...');
+  next();
+});
 
-// tourSchema.post("save", function (doc, next) {
-//   console.log(doc);
-//   next();
-// });
+tourSchema.post('save', function (doc, next) {
+  console.log(doc);
+  next();
+});
 
 //QUERY MIDDLEWARE
 // tourSchema.pre("find", function (next) {

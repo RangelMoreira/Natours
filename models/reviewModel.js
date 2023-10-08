@@ -1,6 +1,8 @@
 //review / rating / createdAt /ref to tour /ref to user
 const mongoose = require('mongoose');
 
+const Tour = require('./tourModel');
+
 const reviewSchema = new mongoose.Schema(
   {
     review: {
@@ -50,6 +52,7 @@ reviewSchema.pre(/^find/, function (next) {
 });
 
 reviewSchema.statics.calcAverageRatings = async function (tourId) {
+  //console.log(tourId);
   const stats = await this.aggregate([
     {
       $match: { tour: tourId },
@@ -64,12 +67,16 @@ reviewSchema.statics.calcAverageRatings = async function (tourId) {
   ]);
 
   console.log(stats);
+
+  await Tour.findByIdAndUpdate(tourId, {
+    ratingsQuantity: stats[0].nRating,
+    ratingsAverage: stats[0].avgRating,
+  });
 };
 
-reviewSchema.pre('save', function () {
+reviewSchema.post('save', function () {
   //this points to current review
   this.constructor.calcAverageRatings(this.tour);
-  next();
 });
 
 //We should  use capital letters for the first letter in mondel names

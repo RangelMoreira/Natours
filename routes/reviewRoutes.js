@@ -8,6 +8,7 @@ router.use(authController.protect);
 
 router.route('/').get(authController.protect, reviewController.getAllReviews);
 router
+  //.get(reviewController.getAllReviews)
   .route('/')
   .post(
     authController.restrictTo('user'),

@@ -28,6 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //Set security HTTP headers
 app.use(helmet());
+// app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin' }));
 
 //Devlopment logging
 if (process.env.NODE_ENV.trim() === 'development') {

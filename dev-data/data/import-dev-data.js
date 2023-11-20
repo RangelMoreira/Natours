@@ -42,10 +42,10 @@ const reviews = JSON.parse(
 //IMPORT DATA INTO DB
 const importData = async () => {
   try {
-    await Tour.create(tours);
     //Turn off the password encryption
     await User.create(users, { validateBeforeSave: false });
     await Review.create(reviews);
+    await Tour.create(tours);
     console.log('Data Successfully loaded!');
     process.exit();
   } catch (error) {

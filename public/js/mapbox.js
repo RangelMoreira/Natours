@@ -3,10 +3,11 @@
 const locations = JSON.parse(document.getElementById('map').dataset.locations);
 
 mapboxgl.accessToken =
-  'pk.eyJ1Ijoia2V2aW5yYW5nZWwiLCJhIjoiY2tobWF1Z2VmMWdpcjJwcWs1N2FqcG80cCJ9.r9KGGjwBxCYYyrJ0ypd8Ig';
+  'pk.eyJ1Ijoia2V2aW5yYW5nZWwiLCJhIjoiY2xvbG15c21wMWN2OTJxcHF2dDl0YXhzNSJ9.KSK7oEiJ_o28oSqafLTqcw';
 var map = new mapboxgl.Map({
   container: 'map',
-  style: 'mapbox://styles/kevinrangel/clolov6rb006001qn3q3ge9s5',
+  // style: 'mapbox://styles/mapbox/streets-v11',
+  style: 'mapbox://styles/kevinrangel/clp75ak2d012s01qja7xs90wo',
   scrollZoom: false,
   //longitude - latititude
   // center: [-118.113491, 34.111745],

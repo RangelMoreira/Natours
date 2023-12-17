@@ -7,11 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "set  NODE_ENV=development && nodemon server.js",
     "start:prod": "set  NODE_ENV=production && nodemon server.js",
-    "debug": "ndb server.js"
+    "debug": "ndb server.js",
+    "watch:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js",
+    "build:js": "parcel watch ./public/js/index.js --out-dir ./public/js --out-file bundle.js"
   },
   "author": "Kevin Rangel",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
@@ -38,6 +41,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
+    "parcel-bundler": "^1.12.3",
     "prettier": "^2.8.8"
   },
   "engines": {

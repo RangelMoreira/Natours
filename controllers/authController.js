@@ -121,8 +121,10 @@ exports.protect = catchAsync(async (req, res, next) => {
 // Only for rendered pages, no errors!
 exports.isLoggedIn = async (req, res, next) => {
   if (req.cookies.jwt) {
+    //Adding try and catch to avoid problems with the token sent at logout
     try {
-      // 1) verify token
+      // 1) verify toke
+      console.log(jwt.verify);
       const decoded = await promisify(jwt.verify)(
         req.cookies.jwt,
         process.env.JWT_SECRET
@@ -229,6 +231,14 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   // 4) Log the user in, send JWT
   createSendToken(user, 200, res);
 });
+
+exports.logout = (req, res) => {
+  res.cookie('jwt', 'loggedout', {
+    expires: new Date(Date.now() + 10 * 1000),
+    httpOnly: true,
+  });
+  res.status(200).json({ status: 'success' });
+};
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   // 1) Get user from collection
